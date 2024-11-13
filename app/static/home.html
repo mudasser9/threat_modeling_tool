@@ -1,0 +1,100 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Threat Modeling Tool</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo">
+            <a href="/" aria-label="Home">Threat Modeling Tool</a>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('create-dfd')">Create DFD</a></li>
+                <li><a href="#" onclick="showSection('analyze-threats')">Analyze Threats</a></li>
+                <li><a href="#" onclick="showSection('reports')">Reports</a></li>
+                <li><a href="#" onclick="showSection('settings')">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <section id="home" class="section">
+            <h1>Welcome to the Threat Modeling Tool</h1>
+            <p>Get started by creating a new DFD (Data Flow Diagram) or viewing existing models.</p>
+            <button onclick="showSection('create-dfd')">Create New DFD</button>
+            <button onclick="showSection('reports')">View Reports</button>
+        </section>
+
+        <section id="create-dfd" class="section">
+            <h2>Create Data Flow Diagram</h2>
+            <div class="canvas">
+                <p>Canvas for drawing the DFD (Data Flow Diagram).</p>
+            </div>
+
+            <div class="toolbar">
+                <button>Data Store</button>
+                <button>Process</button>
+                <button>External Entity</button>
+                <button>Data Flow</button>
+                <button>Zoom In</button>
+                <button>Zoom Out</button>
+                <button>Save</button>
+            </div>
+
+            <div class="diagram-embed">
+                <iframe id="drawioIframe" src="https://embed.diagrams.net/?embed=1&proto=1" width="100%" height="600" title="Draw.io Diagram"></iframe>
+            </div>
+
+            <div class="actions">
+                <button onclick="exportDiagram()">Export Diagram</button>
+                <button onclick="loadDiagram()">Load Diagram</button>
+                <button onclick="saveDiagram()">Save Diagram</button>
+            </div>
+        </section>
+
+        <section id="analyze-threats" class="section">
+            <h2>Analyze Threats</h2>
+            <p>Threat analysis results will be displayed here.</p>
+        </section>
+
+        <section id="reports" class="section">
+            <h2>Reports</h2>
+            <p>Report generation and visualization will be implemented here.</p>
+        </section>
+
+        <section id="settings" class="section">
+            <h2>Settings</h2>
+            <p>User preferences and integration settings will be configured here.</p>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Threat Modeling Tool. All rights reserved.</p>
+        <nav>
+            <ul>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="#">Support</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+
+    <script src="script.js"></script> 
+</body>
+
+</html>

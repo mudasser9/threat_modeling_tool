@@ -1,22 +1,38 @@
-from flask import Blueprint, render_template, request
-from .dfd import create_dfd
-from .threats import analyze_threats
-from .report import generate_report
+from flask import Flask, render_template, request, redirect, url_for, flash
+from app import flask_app
+import mysql.connector
+from db import get_db_connection
 
-main_routes = Blueprint('main', __name__)
+# Route for the login page
+@flask_app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-@main_routes.route('/')
-def index():
-    return render_template('index.html')
+        # Authenticate the user
+        if authenticate_user(username, password):
+            return redirect(url_for('home'))  
+        else:
+            flash("Invalid username or password", 'danger')
+    
+    return render_template('home.html')  
 
-@main_routes.route('/create_dfd', methods=['POST'])
-def create_dfd_route():
-    pass
+# Authentication function
+def authenticate_user(username, password):
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-@main_routes.route('/analyze_threats', methods-['POST'])
-def analyze_threats_route():
-    pass
+    # Query to check if the username and password match
+    cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
+    user = cursor.fetchone()
 
-@main_routes.route('/generate_report', methods=['GET'])
-def generate_report_route():
-    pass
+    conn.close()
+
+    # Return True if user is found, otherwise False
+    return user is not None
+
+# Route for home page after successful login
+@flask_app.route('/home')
+def home():
+    return render_template('home.html')  # Your main page after login

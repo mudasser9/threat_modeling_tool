@@ -1,34 +1,48 @@
-# app/dfd.py
 import dash
 from dash import dcc, html
+import dash_core_components as dcc
+import dash_html_components as html
 from dash.dependencies import Input, Output
+import plotly.express as px
+import pandas as pd
+from db_config import get_db_connection
 
+# Create Dash app
 def create_dfd_app(flask_app):
-    app = dash.Dash(__name__, server=flask_app, url_base_pathname='/dash/')
+    dash_app = dash.Dash(__name__, server=flask_app, url_base_pathname='/dash/')
 
-    app.layout = html.Div([
-        dcc.Input(id='component-name', type='text', placeholder='Enter Component Name'),
-        dcc.Dropdown(
-            id='component-type',
-            options=[
-                {'label': 'Data Store', 'value': 'Data Store'},
-                {'label': 'Process', 'value': 'Process'},
-                {'label': 'External Entity', 'value': 'External Entity'}
-            ],
-            placeholder='Select Component Type'
+    # Sample data fetch function
+    def fetch_data():
+        conn = get_db_connection()
+        query = "SELECT category, value FROM sample_data_table"  # Replace with your actual query
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
+
+    # Fetch initial data
+    df = fetch_data()
+
+    # Create sample plots
+    bar_fig = px.bar(df, x='category', y='value', title="Sample Bar Graph")
+    line_fig = px.line(df, x='category', y='value', title="Sample Line Graph")
+
+    # Layout for the dashboard
+    dash_app.layout = html.Div(children=[
+        html.H1(children='Dashboard'),
+
+        html.Div(children='''
+            This dashboard shows sample data visualizations.
+        '''),
+
+        dcc.Graph(
+            id='bar-graph',
+            figure=bar_fig
         ),
-        html.Button('Add Component', id='add-button'),
-        html.Div(id='canvas', style={'border': '1px solid black', 'width': '300px', 'height': '500px', 'overflow': 'auto'})
+
+        dcc.Graph(
+            id='line-graph',
+            figure=line_fig
+        )
     ])
 
-    @app.callback(
-        Output('canvas', 'children'),
-        [Input('add-button', 'n_clicks')],
-        [Input('component-type', 'value'), Input('component-name', 'value')]
-    )
-    def update_canvas(n_clicks, component_type, component_name):
-        if n_clicks is None or not component_type or not component_name:
-            return []
-        return [html.Div(f'{component_name} ({component_type})', style={'padding': '5px'})]
-
-    return app
+    return dash_app
